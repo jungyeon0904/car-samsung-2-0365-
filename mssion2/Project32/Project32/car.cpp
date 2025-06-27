@@ -1,5 +1,8 @@
 ﻿#include <stdio.h>
-enum CarType
+#include "carType.cpp"
+
+
+enum cartype
 {
     SEDAN = 1,
     SUV,
@@ -10,7 +13,8 @@ enum Engine
 {
     GM = 1,
     TOYOTA,
-    WIA
+    WIA,
+    BROKEN
 };
 
 enum BrakeSystem
@@ -34,26 +38,32 @@ public:
     }
 
     void selectCarType(int answer) {
-        carType = static_cast<CarType>(answer);
-        if (answer == 1)
-            printf("차량 타입으로 Sedan을 선택하셨습니다.\n");
-        if (answer == 2)
-            printf("차량 타입으로 SUV을 선택하셨습니다.\n");
-        if (answer == 3)
-            printf("차량 타입으로 Truck을 선택하셨습니다.\n");
+        if (answer == SEDAN) {
+            Factory* sedanFac = new SedanFactory();
+            carType = sedanFac->makeCar();
+        }
+        if (answer == SUV) {
+            Factory* suvFac = new SuvFactory();
+            carType = suvFac->makeCar();
+        }
+        if (answer == TRUCK) {
+            Factory* truckFac = new TruckFactory();
+            carType = truckFac->makeCar();
+        }
+        carType->setCarType();
     }
 
-    CarType getCarType() {
-        return carType;
+    int getCarType() {
+        return carType->type;
     }
 
     void selectEngine(int answer) {
         engine = static_cast<Engine>(answer);
-        if (answer == 1)
+        if (answer == GM)
             printf("GM 엔진을 선택하셨습니다.\n");
-        if (answer == 2)
+        if (answer == TOYOTA)
             printf("TOYOTA 엔진을 선택하셨습니다.\n");
-        if (answer == 3)
+        if (answer == WIA)
             printf("WIA 엔진을 선택하셨습니다.\n");
     }
 
@@ -63,11 +73,11 @@ public:
 
     void selectBrakeSystem(int answer) {
         brakeSystem = static_cast<BrakeSystem>(answer);
-        if (answer == 1)
+        if (answer == MANDO)
             printf("MANDO 제동장치를 선택하셨습니다.\n");
-        if (answer == 2)
+        if (answer == CONTINENTAL)
             printf("CONTINENTAL 제동장치를 선택하셨습니다.\n");
-        if (answer == 3)
+        if (answer == BOSCH_B)
             printf("BOSCH 제동장치를 선택하셨습니다.\n");
     }
 
@@ -77,9 +87,9 @@ public:
 
     void selectSteeringSystem(int answer) {
         steeringSystem = static_cast<SteeringSystem>(answer);
-        if (answer == 1)
+        if (answer == BOSCH_S)
             printf("BOSCH 조향장치를 선택하셨습니다.\n");
-        if (answer == 2)
+        if (answer == MOBIS)
             printf("MOBIS 조향장치를 선택하셨습니다.\n");
     }
 
@@ -89,16 +99,17 @@ public:
 
     int isValidCheck()
     {
-        if (carType == SEDAN && brakeSystem == CONTINENTAL)
+        if (carType->type == SEDAN && brakeSystem == CONTINENTAL)
             return false;
-        else if (carType == SUV && engine == TOYOTA)
+        else if (carType->type == SUV && engine == TOYOTA)
             return false;
-        else if (carType == TRUCK && engine == WIA)
+        else if (carType->type == TRUCK && engine == WIA)
             return false;
-        else if (carType == TRUCK && brakeSystem == MANDO)
+        else if (carType->type == TRUCK && brakeSystem == MANDO)
             return false;
         else if (brakeSystem == BOSCH_B && steeringSystem != BOSCH_S)
             return false;
+       
         return true;
     }
 
@@ -110,7 +121,7 @@ public:
         }
         else
         {
-            if (engine == 4)
+            if (engine == BROKEN)
             {
                 printf("엔진이 고장나있습니다.\n");
                 printf("자동차가 움직이지 않습니다.\n");
@@ -118,27 +129,27 @@ public:
             }
             else
             {
-                if (carType == 1)
+                if (carType->type == SEDAN)
                     printf("Car Type : Sedan\n");
-                if (carType == 2)
+                if (carType->type == SUV)
                     printf("Car Type : SUV\n");
-                if (carType == 3)
+                if (carType->type == TRUCK)
                     printf("Car Type : Truck\n");
-                if (engine == 1)
+                if (engine == GM)
                     printf("Engine : GM\n");
-                if (engine == 2)
+                if (engine == TOYOTA)
                     printf("Engine : TOYOTA\n");
-                if (engine == 3)
+                if (engine == WIA)
                     printf("Engine : WIA\n");
-                if (brakeSystem == 1)
+                if (brakeSystem == MANDO)
                     printf("Brake System : Mando");
-                if (brakeSystem == 2)
+                if (brakeSystem == CONTINENTAL)
                     printf("Brake System : Continental\n");
-                if (brakeSystem == 3)
+                if (brakeSystem == BOSCH_B)
                     printf("Brake System : Bosch\n");
-                if (steeringSystem == 1)
+                if (steeringSystem == BOSCH_S)
                     printf("SteeringSystem : Bosch\n");
-                if (steeringSystem == 2)
+                if (steeringSystem == MOBIS)
                     printf("SteeringSystem : Mobis\n");
 
                 printf("자동차가 동작됩니다.\n");
@@ -148,22 +159,22 @@ public:
     }
 
     void testProducedCar(){
-        if (carType == SEDAN && brakeSystem == CONTINENTAL)
+        if (carType->type == SEDAN && brakeSystem == CONTINENTAL)
         {
             printf("자동차 부품 조합 테스트 결과 : FAIL\n");
             printf("Sedan에는 Continental제동장치 사용 불가\n");
         }
-        else if (carType == SUV && engine == TOYOTA)
+        else if (carType->type == SUV && engine == TOYOTA)
         {
             printf("자동차 부품 조합 테스트 결과 : FAIL\n");
             printf("SUV에는 TOYOTA엔진 사용 불가\n");
         }
-        else if (carType == TRUCK && engine == WIA)
+        else if (carType->type == TRUCK && engine == WIA)
         {
             printf("자동차 부품 조합 테스트 결과 : FAIL\n");
             printf("Truck에는 WIA엔진 사용 불가\n");
         }
-        else if (carType == TRUCK && brakeSystem == MANDO)
+        else if (carType->type == TRUCK && brakeSystem == MANDO)
         {
             printf("자동차 부품 조합 테스트 결과 : FAIL\n");
             printf("Truck에는 Mando제동장치 사용 불가\n");
@@ -181,7 +192,7 @@ public:
 
 
 private:
-    CarType carType;
+    CarType* carType;
     Engine engine;
     BrakeSystem brakeSystem;
     SteeringSystem steeringSystem;

@@ -111,6 +111,7 @@ TEST(GroupValidCheck, isValidCheck4) {
 
 TEST(GroupValidCheck, isValidCheck5) {
 	Car car = Car::getInstance();
+	car.selectCarType(1);
 	car.selectBrakeSystem(3);
 	car.selectSteeringSystem(2);
 	bool ret = car.isValidCheck();
@@ -120,6 +121,7 @@ TEST(GroupValidCheck, isValidCheck5) {
 
 TEST(GroupValidCheck, isValidCheck6) {
 	Car car = Car::getInstance();
+	car.selectCarType(1);
 	car.selectBrakeSystem(3);
 	car.selectSteeringSystem(1);
 	bool ret = car.isValidCheck();
@@ -172,6 +174,16 @@ TEST(GroupRunProducedCar, runProducedCarCheck5) {
 	car.selectCarType(2);
 	car.selectEngine(2);
 	car.selectBrakeSystem(2);
+	car.selectSteeringSystem(2);
+	bool ret = car.runProducedCar();
+	EXPECT_EQ(false, ret);
+}
+
+TEST(GroupValidCheck, runProducedCarCheck6) {
+	Car car = Car::getInstance();
+	car.selectCarType(1);
+	car.selectEngine(1);
+	car.selectBrakeSystem(3);
 	car.selectSteeringSystem(2);
 	bool ret = car.runProducedCar();
 	EXPECT_EQ(false, ret);
